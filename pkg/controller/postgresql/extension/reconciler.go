@@ -76,7 +76,7 @@ func Setup(mgr ctrl.Manager, l logging.Logger) error {
 type connector struct {
 	kube  client.Client
 	usage resource.Tracker
-	newDB func(creds map[string][]byte, database string) xsql.DB
+	newDB func(creds map[string][]byte, database string, sslmode string) xsql.DB
 }
 
 func (c *connector) Connect(ctx context.Context, mg resource.Managed) (managed.ExternalClient, error) {
@@ -112,10 +112,10 @@ func (c *connector) Connect(ctx context.Context, mg resource.Managed) (managed.E
 	// We do not want to create an extension on the default DB
 	// if the user was expecting a database name to be resolved.
 	if cr.Spec.ForProvider.Database != nil {
-		return &external{db: c.newDB(s.Data, *cr.Spec.ForProvider.Database)}, nil
+		return &external{db: c.newDB(s.Data, *cr.Spec.ForProvider.Database, pc.Spec.SslMode)}, nil
 	}
 
-	return &external{db: c.newDB(s.Data, "")}, nil
+	return &external{db: c.newDB(s.Data, "", pc.Spec.SslMode)}, nil
 }
 
 type external struct{ db xsql.DB }

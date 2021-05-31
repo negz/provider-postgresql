@@ -26,6 +26,11 @@ import (
 type ProviderConfigSpec struct {
 	// Credentials required to authenticate to this provider.
 	Credentials ProviderCredentials `json:"credentials"`
+	// Defines the SSL mode used to set up a connection to the provided
+	// PostgreSQL instance
+	// +kubebuilder:validation:Enum=disable;require;verify-ca;verify-full
+	// +optional
+	SslMode string `json:"sslmode"`
 }
 
 const (

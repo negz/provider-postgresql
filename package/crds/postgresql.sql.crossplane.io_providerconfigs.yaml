@@ -66,6 +66,14 @@ spec:
                 required:
                 - source
                 type: object
+              sslmode:
+                description: Defines the SSL mode used to set up a connection to the provided PostgreSQL instance
+                enum:
+                - disable
+                - require
+                - verify-ca
+                - verify-full
+                type: string
             required:
             - credentials
             type: object
